@@ -1,0 +1,12 @@
+function c_ij = LNA_many_runs_c_ij(n,x0,j,dt,temp,t,n_runs)
+
+% calculates c_ij by using the c_ij time evolution equation
+
+steps = round(t/dt);
+c_ij=zeros(n,n,steps+1,n_runs);
+mu(:,1)=x0;
+for run=1:n_runs
+    for i=1:steps
+        c_ij(:,:,i+1,run)=one_step_c_ij(c_ij(:,:,i,run),j,mu);
+    end
+end
