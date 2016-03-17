@@ -2,20 +2,21 @@
 % values.
 
 temp = 0.01;
+n = 50;
 
 %% Read in all the simulation files at the given temperature
 pathName = '/home/k1594876/Documents/theoretical_modelling/data/';
 
 %data array for single temperature but different runs
-myOrigData = zeros(10,50,5001);
-myLNAData = zeros(10,50,5001);
-myPlefkaData = zeros(10,50,5001);
+myOrigData = zeros(10,n,5001);
+myLNAData = zeros(10,n,5001);
+myPlefkaData = zeros(10,n,5001);
  formatSpec = '%f';
  %TODO This is hard-coded for size 
- sizeA = [5001, 50];
+ sizeA = [5001, n];
 
 for J=1:10
-    fileName = strcat('dt0.01_t50_n50_nRuns20_jamp1_x0amp1_eta1_temp', num2str(temp), '_run', num2str(J));
+    fileName = strcat('dt0.01_t50_n', num2str(n), '_nRuns20_jamp1_x0amp1_eta1_temp', num2str(temp), '_run', num2str(J));
     
    %Original 
     fileEndingOrig = '_muOrig.txt';
@@ -49,6 +50,19 @@ myOrigMean = squeeze(mean(myOrigData, 1));
 myLNAMean = squeeze(mean(myLNAData, 1));
 myPlefkaMean = squeeze(mean(myPlefkaData, 1));
 
+muLNAGoodness = goodnessOfFit(myOrigMean, myLNAMean, n);
+muPlefkaGoodness = goodnessOfFit(myOrigMean, myPlefkaMean, n);
+
+figure;
+plot(muLNAGoodness, 'g');
+hold on;
+plot(muPlefkaGoodness);
+title('LNA Mean goodness of fit');
+legend('LNA','Plefka')
+hold off;
+
+
+%% Plot things
 figure;
 plot(myOrigMean');
 title('Original Mean');
