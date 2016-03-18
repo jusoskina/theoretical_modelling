@@ -1,0 +1,60 @@
+% simulates the original function, as well as Plefka and LNA
+
+tic
+
+%% Declare variables
+global dt;
+global t;
+global n;
+global temp;
+global j_glob;
+global x0_glob;
+
+
+%% Initialise variables
+dt = 0.001;
+t=20;
+n=4;
+temp=0.01;
+
+n_runs=50;
+jamp=10;
+x0amp=1.0;
+eta = 1;
+
+j_glob=j_sample_eta(n,jamp,eta);
+x0_glob=x0amp*randn(n,1);
+
+simulate_many
+
+global x_glob;
+x_glob=many_runs(n,x0_glob,j_glob,dt,temp,t,n_runs);
+%claculates the mean over the runs
+x_average = mean(x_glob,1);
+% 
+% times=[0:dt:t];
+% figure;
+% plot(times, squeeze(x_average(1,:,:)));
+% title('Mean');
+% 
+% c_ii = variance(x_glob);
+% 
+% % x_variance = var(x,0,2);
+% % average_var_over_n = mean(x_variance,1);
+% figure;
+% plot(times, c_ii);
+% %plot(squeeze(average_var_over_n(1,1,:)));
+% title('Variance');
+% time = toc
+% 
+% c_ij = covariance(x_glob);
+% figure;
+% plot(times, squeeze(c_ij(1,2,:)));
+% title('Covariance1');
+
+% times=[0:dt:t];
+% t1=t/2;
+% t2=[t1:dt:t];
+% c=correlation(x_average,times,t1,t2,t,dt);
+% %c=correlation(x,times,t1,t2,t,dt);
+% plot(t2-t1,c)
