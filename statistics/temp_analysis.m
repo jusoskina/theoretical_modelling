@@ -17,7 +17,8 @@ muLNAGoodness = zeros(tRangeLength, 5001);
 muPlefkaGoodness = zeros(tRangeLength, 5001);
 
 muOrigTransient = zeros(tRangeLength, 5001);
-
+muLNATransient = zeros(tRangeLength, 5001);
+muPlefkaTransient = zeros(tRangeLength, 5001);
 
  formatSpec = '%f';
  %TODO This is hard-coded for size 
@@ -64,6 +65,8 @@ muOrigTransient = zeros(tRangeLength, 5001);
     muPlefkaGoodness(T,:) = goodnessOfFit(myOrigMean, myPlefkaMean, n)';
     
     muOrigTransient(T,:) = transient(myOrigMean, n);
+    muLNATransient(T,:) = transient(myLNAMean, n);
+    muPlefkaTransient(T,:) = transient(myPlefkaMean, n);
 
  end
 
@@ -99,8 +102,23 @@ muOrigTransient = zeros(tRangeLength, 5001);
 figure;
 hold on;
 title('Transients Original Mu');
-for ii=1:n
+for ii=1:tRangeLength
 plot(muOrigTransient(ii,:)','color',rand(1,3));
+end
+hold off;
+
+figure;
+hold on;
+title('Transients LNA Mu');
+for ii=1:tRangeLength
+plot(muLNATransient(ii,:)','color',rand(1,3));
+end
+
+figure;
+hold on;
+title('Transients Plefka Mu');
+for ii=1:tRangeLength
+plot(muPlefkaTransient(ii,:)','color',rand(1,3));
 end
 
 % TODO calculate variance on the average and figure out what to do with it
