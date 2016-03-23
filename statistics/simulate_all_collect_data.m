@@ -23,7 +23,7 @@ eta = 1;
 
 T_range = [0.001, 0.005, 0.010, 0.020, 0.030, 0.040, 0.050, 0.060, 0.070, 0.080, 0.090, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 2, 3, 4, 5];
 %T_range = [0,1,3];
-pathName = '/home/k1594876/Documents/theoretical_modelling/data/';
+pathName = '/home/k1594876/Documents/theoretical_modelling/data2/';
 
 %% Save data for all the variables
 
