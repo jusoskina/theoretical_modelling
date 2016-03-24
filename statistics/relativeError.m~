@@ -1,0 +1,11 @@
+function relativeError = relativeError( origData, errors)
+%calculates sum(deltaX)/sum(X), where this is summed over n. This is done
+%because otherwise dividing by x->0 blows the relative errors up
+
+errorsSum = sum(sqeeze(errors,1));
+valuesSum = sum(sqeeze(origData,1));
+
+relativeError = errorsSum./valuesSum;
+
+end
+
