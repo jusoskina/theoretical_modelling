@@ -100,10 +100,10 @@ ciiPlefkaGoodnessTimeAvStErr = zeros(jAmpLength, tRangeLength);
 %PLOT LNA CIIs for a single J
 %             figure;
 %             hold on;
-%             titleName = strcat(' LNA Cii, Jamp= ', num2str(jamp), ', Temp = ', num2str(temp), ' J= ', num2str(J));
+%             titleName = strcat(' LNA , Jamp= ', num2str(jamp), ', Temp = ', num2str(temp), ' J= ', num2str(J));
 %             title(titleName);
 %             for nn=1:n
-%             plot(squeeze(myLNAData(10,nn,:)),'color',rand(1,3));
+%             plot(squeeze(myOrigData(1,nn,:)),'color',rand(1,3));
 %             end
     
     %% Do Goodness of fit for all J and x0
