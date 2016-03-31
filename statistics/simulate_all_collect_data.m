@@ -24,10 +24,10 @@ eta = 1;
 T_range = [0.001, 0.010, 0.1, 1, 5];
 n_runs_range = [20, 20, 40, 80, 100];
 time_range = [400, 400, 400, 400, 400];
-J_range = [0.5, 1,10];
+J_range = [0.01, 0.1, 0.5, 1,10];
 
 
-pathName = '/home/k1594876/Documents/theoretical_modelling/data/';
+pathName = '/home/k1594876/Documents/theoretical_modelling/data2/';
 
 %% Save data for all the variables
 

@@ -16,11 +16,16 @@ T_range = [0.001, 0.010, 0.1, 1, 5];
 n_runs_range = [20, 20, 40, 80, 100];
 time_range = [400, 400, 400, 400, 400];
 J_Amp_range = [0.01, 0.1, 0.5, 1,10];
-
+%J_Amp_range = [1];
 
 tRangeLength = length(T_range);
 jAmpLength = length(J_Amp_range);
 %data array for single temperature but different runs
+
+muLNAGoodnessTimeAv = zeros(jAmpLength, tRangeLength);
+muLNAGoodnessTimeAvStErr = zeros(jAmpLength, tRangeLength);
+muPlefkaGoodnessTimeAv = zeros(jAmpLength, tRangeLength);
+muPlefkaGoodnessTimeAvStErr = zeros(jAmpLength, tRangeLength);
 
  formatSpec = '%f';
  %TODO This is hard-coded for size 
@@ -105,14 +110,14 @@ jAmpLength = length(J_Amp_range);
         relativeErrorOrigMu(J,:) = relativeError(myOrigData(J,:,:), muOrigErrors(J,:,:));
     end
     
-
-                figure;
-            hold on;
-            titleName = strcat(' Orig Mu, Jamp= ', num2str(jamp), ', Temp = ', num2str(temp), ' J= ', num2str(J));
-            title(titleName);
-            for nn=1:n
-            plot(squeeze(myOrigData(1,nn,:)),'color',rand(1,3));
-            end
+%PLOT ORIGINAL MU
+%             figure;
+%             hold on;
+%             titleName = strcat(' Orig Mu, Jamp= ', num2str(jamp), ', Temp = ', num2str(temp), ' J= ', num2str(J));
+%             title(titleName);
+%             for nn=1:n
+%             plot(squeeze(myOrigData(1,nn,:)),'color',rand(1,3));
+%             end
     
     %% Do Goodness of fit for all J and x0
     for J=1:10
@@ -124,30 +129,38 @@ jAmpLength = length(J_Amp_range);
         muLNATransient(J,:) = transient(squeeze(myLNAData(J,:,:)), n);
         muPlefkaTransient(J,:) = transient(squeeze(myPlefkaData(J,:,:)), n);
     end
-     %TRANSIENTS. Why are they behaving strangely????
+     %PLOT TRANSIENTS
 %     figure;
 %     hold on;
 %     titleName = strcat('Transients Mu, Jamp= ', num2str(jamp), ', Temp = ', num2str(temp));
 %     title(titleName);
-%     for jj=1:2
-%     plot(muOrigTransient(jj,:));
+%     for jj=1:10
+%     plot((1:10:40001),muOrigTransient(jj,:),'color',rand(1,3));
+%     set(gca,'XScale','log');
 %     end
     
     
     muLNAGoodnessAveraged(T,:) = squeeze(mean(muLNAGoodness, 1));
     muPlefkaGoodnessAveraged(T,:) = squeeze(mean(muPlefkaGoodness, 1));
     
-%         clear title xlabel ylabel;
-%          figure;
-%         hold on;
-%         titleName = strcat('Goodness of Fit LNA Mu, Jamp=', num2str(jamp), 'T=', num2str(temp));
-%         plot(squeeze(mean(muLNAGoodness, 1))','color',rand(1,3));
-%         title(titleName);
-%         hold off;
-% 
+    [muLNAGoodnessTimeAv(jAmp, T), muLNAGoodnessTimeAvStErr(jAmp, T)] = averagedGoodnessOfFit(muLNAGoodnessAveraged(T,:), jAmp, T, noSteps);
+    [muPlefkaGoodnessTimeAv(jAmp, T), muPlefkaGoodnessTimeAvStErr(jAmp, T)] = averagedGoodnessOfFit(muPlefkaGoodnessAveraged(T,:), jAmp, T, noSteps);
+
+    
+    %AVERAGED GOODNESS OF FIT LNA
+    
+%       PLOT GOODNESS OF FIT LNA
 %         figure;
 %         hold on;
-%         plot(squeeze(mean(muPlefkaGoodness, 1))','color',rand(1,3));
+%         titleName = strcat('Goodness of Fit LNA Mu, Jamp=', num2str(jamp), 'T=', num2str(temp));
+%         plot(squeeze(muLNAGoodnessAveraged(T,:)));
+%         title(titleName);
+%         hold off;
+%         
+%       PLOT GOODNESS OF FIT PLEFKA
+%         figure;
+%         hold on;
+%         plot(squeeze(muPlefkaGoodnessAveraged(T,:)));
 %         titleName = strcat('Goodness of Fit Plefka Mu, Jamp=', num2str(jamp), 'T=', num2str(temp));
 %         title(titleName);
 %         hold off;
@@ -177,43 +190,40 @@ jAmpLength = length(J_Amp_range);
     muLNATransientAveraged(T,:) = squeeze(mean(muLNATransient, 1));
     muPlefkaTransientAveraged(T,:) = squeeze(mean(muPlefkaTransient, 1));
     
+    %PLOT AVERAGED TRANSIENTS
 %     figure;
 %     hold on;
 %     titleName = strcat('Transients Mu, Jamp= ', num2str(jamp), ', Temp = ', num2str(temp));
 %     title(titleName);
-%     plot(muOrigTransientAveraged(T,:));
+%     plot((1:10:40001),muOrigTransientAveraged(T,:));
+% set(gca,'XScale','log');
     
-    
-    
-    %% Plot errors
-    % ORIG STERR on noise averaging
-    
-% figure;
-% hold on;
-% titleName = strcat('RelativeError Mu, Jamp= ', num2str(jamp), ', Temp = ', num2str(temp));
-% title(titleName);
-% for ii=1:15
-%     errorForJ = squeeze(relativeErrorOrigMu(ii,:));
-% plot(errorForJ','color',rand(1,3));
-% end
+  %  PLOT RELATIVE STERR on noise averaging
+%     figure;
+%     hold on;
+%     titleName = strcat('RelativeError Mu, Jamp= ', num2str(jamp), ', Temp = ', num2str(temp));
+%     title(titleName);
+%     for ii=1:10
+%         errorForJ = squeeze(relativeErrorOrigMu(ii,:));
+%         plot(errorForJ','color',rand(1,3));
+%     end
 
-    
-    %WRONG
-    %myOrigMean = squeeze(mean(myOrigData, 1));
-    %myLNAMean = squeeze(mean(myLNAData, 1));
-    %myPlefkaMean = squeeze(mean(myPlefkaData, 1));
-    
-%     muOrigTransient(T,:) = transient(myOrigMean, n);
-%     muLNATransient(T,:) = transient(myLNAMean, n);
-%     muPlefkaTransient(T,:) = transient(myPlefkaMean, n);
+% PLOT absolute standard errors on noise
+%     figure;
+%     hold on;
+%     titleName = strcat('StandardError Mu, Jamp= ', num2str(jamp), ', Temp = ', num2str(temp));
+%     title(titleName);
+%         errorForJ = squeeze(mean(squeeze(mean(muOrigErrors(:,:,:),2)),1));
+%         plot(errorForJ','color',rand(1,3));
+
 
  end
 
  %% PLOT
  
- clear title xlabel ylabel;
- 
-
+%  clear title xlabel ylabel;
+%  
+% 
 %  figure;
 % hold on;
 % titleName = strcat('Goodness of Fit LNA Mu, Jamp=', num2str(jamp));
@@ -241,20 +251,6 @@ jAmpLength = length(J_Amp_range);
 %     legend('LNA','Plefka')
 %     hold off;
 
-% 
-% 
-% %% Plot things
-% figure;
-% plot(myOrigMean');
-% title('Original Mean');
-% 
-% figure;
-% plot(myLNAMean');
-% title('LNA Mean');
-% 
-% figure;
-% plot(myPlefkaMean');
-% title('Plefka Mean');
 
 % figure;
 % hold on;
@@ -278,5 +274,3 @@ jAmpLength = length(J_Amp_range);
 % plot(muPlefkaTransientAveraged(ii,:)','color',rand(1,3));
 % end
  end
-
-% TODO calculate variance on the average and figure out what to do with it
